@@ -34,4 +34,6 @@ jobs:
       if: github.ref == 'refs/heads/main'
       with:
         name: ${{env.BUILD_CONFIGURATION}} ${{ matrix.platform }}
-        path: ${{ matrix.platform }}/${{env.BUILD_CONFIGURATION}}
+        path: |
+          ${{ matrix.platform }}/${{env.BUILD_CONFIGURATION}}
+          ${{env.BUILD_CONFIGURATION}}
