@@ -127,9 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="WERCrashApp.cpp" />
+    <ClCompile Include="src\CrashHandler.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\WerReport.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\CrashHandler.h" />
+    <ClInclude Include="inc\WerReport.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
