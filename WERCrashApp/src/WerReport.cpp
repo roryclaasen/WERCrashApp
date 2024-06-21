@@ -1,4 +1,4 @@
-#include "../inc/WerReport.h"
+#include "WerReport.h"
 
 #include <sstream>
 #include <strsafe.h>

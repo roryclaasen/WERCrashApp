@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "../inc/CrashHandler.h"
+#include "CrashHandler.h"
 
 namespace
 {

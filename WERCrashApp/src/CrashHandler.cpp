@@ -1,4 +1,4 @@
-#include "../inc/CrashHandler.h"
+#include "CrashHandler.h"
 
 #include <iostream>
 #include <sstream>
@@ -7,7 +7,7 @@
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
 
-#include "../inc/WerReport.h"
+#include "WerReport.h"
 
 namespace
 {
