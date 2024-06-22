@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-namespace CrashApp
+namespace CrashHandler
 {
     static bool s_ShouldWait{ false };
 

@@ -5,7 +5,7 @@
 #include <werapi.h>
 #pragma comment(lib, "wer.lib")
 
-namespace CrashApp
+namespace WERReport
 {
     WER_SUBMIT_RESULT CreateReport(struct ::_EXCEPTION_POINTERS* ExceptionInfo);
 }

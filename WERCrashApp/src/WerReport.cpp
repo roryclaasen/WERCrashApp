@@ -13,7 +13,7 @@
 
 #pragma comment(lib, "version.lib")
 
-namespace CrashApp
+namespace WERReport
 {
     constexpr int MAX_SPRINTF = 1024;
 
@@ -23,12 +23,15 @@ namespace CrashApp
 
         WCHAR tempPathBuffer[MAX_PATH];
         DWORD tempPathLength = GetTempPath(MAX_PATH, tempPathBuffer);
-        if (tempPathLength == 0 || tempPathLength > MAX_PATH) {
+        if (tempPathLength == 0 || tempPathLength > MAX_PATH)
+        {
             return false;
         }
+
         std::wstringstream ss;
         ss << tempPathBuffer << tempFolder;
-        if (CreateDirectory(ss.str().c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS) {
+        if (CreateDirectory(ss.str().c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)
+        {
             outDirectoryPath = ss.str();
             return true;
         }
@@ -186,4 +189,4 @@ namespace CrashApp
 
         return SubmitResult;
     }
-}
+} // namespace WERReport

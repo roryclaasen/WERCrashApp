@@ -19,18 +19,18 @@ namespace
 
         static_cast<CrashHelper*>(nullptr)->m_DoCrash = 1;
     }
-}
+} // namespace
 
 int main(int argc, char* argv[])
 {
     if (OptionExists(argv, argv + argc, "-wait"))
     {
-        CrashApp::s_ShouldWait = true;
+        CrashHandler::s_ShouldWait = true;
         std::cout << "When crashing, this program will wait till a debugger is attached." << std::endl;
     }
 
-    CrashApp::InitializeCriticalSection();
-    SetUnhandledExceptionFilter(CrashApp::BasicUnhandledExceptionHandler);
+    CrashHandler::InitializeCriticalSection();
+    SetUnhandledExceptionFilter(CrashHandler::BasicUnhandledExceptionHandler);
 
     DereferenceNull();
     return 0;

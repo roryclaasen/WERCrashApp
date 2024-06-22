@@ -9,8 +9,11 @@
 
 #include "WerReport.h"
 
-namespace
+namespace CrashHandler
 {
+    CRITICAL_SECTION s_CrashHandlerCritricalSection;
+    DWORD s_ExceptionThreadID = 0;
+
     struct ScopedCriticalSection
     {
         ScopedCriticalSection(CRITICAL_SECTION* critRef)
@@ -28,36 +31,28 @@ namespace
         CRITICAL_SECTION* crit;
     };
 
-    CRITICAL_SECTION m_cs;
-
-    DWORD s_ExceptionThreadID = 0;
-
-    void SetExceptionInProgress(DWORD ticketTrackerThreadID)
+    static void SetExceptionInProgress(const DWORD ticketTrackerThreadID)
     {
         s_ExceptionThreadID = ticketTrackerThreadID;
     }
 
-    bool IsExceptionThread()
+    static bool IsExceptionThread()
     {
         return (GetCurrentThreadId() == s_ExceptionThreadID);
     }
 
-    bool IsExceptionInProgress()
+    static bool IsExceptionInProgress()
     {
         return (s_ExceptionThreadID != 0);
     }
 
-    __declspec(noinline) void SpinForever()
+    static __declspec(noinline) void SpinForever()
     {
         while (true)
         {
             SwitchToThread();
         }
     }
-}
-
-namespace CrashApp
-{
 
     static LONG WINAPI SpinWaitExceptionHandler(struct ::_EXCEPTION_POINTERS* ExceptionInfo)
     {
@@ -76,7 +71,7 @@ namespace CrashApp
 
     LONG WINAPI BasicUnhandledExceptionHandler(struct ::_EXCEPTION_POINTERS* ExceptionInfo)
     {
-        ScopedCriticalSection scopedCriticalSection(&m_cs);
+        ScopedCriticalSection scopedCriticalSection(&s_CrashHandlerCritricalSection);
 
         SetUnhandledExceptionFilter(SpinWaitExceptionHandler);
         SetExceptionInProgress(GetCurrentThreadId());
@@ -95,7 +90,7 @@ namespace CrashApp
             __debugbreak();
         }
 
-        const auto result = CreateReport(ExceptionInfo);
+        const auto result = WERReport::CreateReport(ExceptionInfo);
         std::cout << "Done! please wait while the process dies" << std::endl;
 
         LONG lResult = EXCEPTION_CONTINUE_SEARCH;
@@ -123,6 +118,6 @@ namespace CrashApp
 
     void InitializeCriticalSection()
     {
-        InitializeCriticalSection(&m_cs);
+        InitializeCriticalSection(&s_CrashHandlerCritricalSection);
     }
-}
+} // namespace CrashHandler
