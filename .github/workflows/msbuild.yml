@@ -20,18 +20,27 @@ jobs:
       matrix:
         platform: [ 'x64' ]
     name: Build ${{ matrix.platform }}
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
     steps:
     - uses: actions/checkout@v4
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
     - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+      working-directory: ${{ github.workspace }}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:PlatformTarget=${{ matrix.platform }} ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:PlatformTarget=${{ matrix.platform }} ${{ env.SOLUTION_FILE_PATH }}
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       if: github.ref == 'refs/heads/main'
       with:
-        name: ${{env.BUILD_CONFIGURATION}} ${{ matrix.platform }}
-        path: ${{ matrix.platform }}/${{env.BUILD_CONFIGURATION}}
+        name: ${{ env.BUILD_CONFIGURATION }} ${{ matrix.platform }}
+        path: ${{ matrix.platform }}/${{ env.BUILD_CONFIGURATION }}
+    - name: Attest
+      if: github.ref == 'refs/heads/main'
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: ${{ matrix.platform }}/${{ env.BUILD_CONFIGURATION }}
