@@ -7,5 +7,5 @@
 
 namespace WERReport
 {
-    WER_SUBMIT_RESULT CreateReport(struct ::_EXCEPTION_POINTERS* ExceptionInfo);
+    WER_SUBMIT_RESULT CreateReport(EXCEPTION_POINTERS* ExceptionInfo);
 }

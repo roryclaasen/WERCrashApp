@@ -54,7 +54,7 @@ namespace CrashHandler
         }
     }
 
-    static LONG WINAPI SpinWaitExceptionHandler(struct ::_EXCEPTION_POINTERS* ExceptionInfo)
+    static LONG WINAPI SpinWaitExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
     {
         if (IsExceptionThread())
         {
@@ -69,7 +69,7 @@ namespace CrashHandler
         return 0;
     }
 
-    LONG WINAPI BasicUnhandledExceptionHandler(struct ::_EXCEPTION_POINTERS* ExceptionInfo)
+    LONG WINAPI BasicUnhandledExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
     {
         ScopedCriticalSection scopedCriticalSection(&s_CrashHandlerCritricalSection);
 

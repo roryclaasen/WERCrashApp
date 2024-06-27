@@ -95,7 +95,7 @@ namespace WERReport
      * Parameters 0 through 7 are predefined for Windows
      * Parameters 8 and 9 are user defined
      */
-    static HRESULT SetReportParameters(HREPORT reportHandle, EXCEPTION_POINTERS* exceptionInfo, const WCHAR* errorMessage, const WCHAR* applicationName)
+    static HRESULT SetReportParameters(HREPORT reportHandle, EXCEPTION_POINTERS* ExceptionInfo, const WCHAR* errorMessage, const WCHAR* applicationName)
     {
         HRESULT Result;
         TCHAR StringBuffer[MAX_SPRINTF] = { 0 };
@@ -117,7 +117,7 @@ namespace WERReport
         Result = WerReportSetParameter(reportHandle, WER_P2, TEXT("Application Timestamp"), TEXT("6672cbc2"));
 
         HMODULE FaultModuleHandle = NULL;
-        GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)exceptionInfo->ExceptionRecord->ExceptionAddress, &FaultModuleHandle);
+        GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)ExceptionInfo->ExceptionRecord->ExceptionAddress, &FaultModuleHandle);
 
         GetModuleFileName(FaultModuleHandle, LocalBuffer, MAX_SPRINTF);
         PathStripPath(LocalBuffer);
@@ -130,10 +130,10 @@ namespace WERReport
         // Result = WerReportSetParameter(reportHandle, WER_P5, TEXT("Fault Module Timestamp"), StringBuffer);
         Result = WerReportSetParameter(reportHandle, WER_P5, TEXT("Fault Module Timestamp"), TEXT("6672cbc2"));
 
-        StringCchPrintf(StringBuffer, MAX_SPRINTF, TEXT("%08x"), exceptionInfo->ExceptionRecord->ExceptionCode);
+        StringCchPrintf(StringBuffer, MAX_SPRINTF, TEXT("%08x"), ExceptionInfo->ExceptionRecord->ExceptionCode);
         Result = WerReportSetParameter(reportHandle, WER_P6, TEXT("Exception Code"), StringBuffer);
 
-        INT_PTR ExceptionOffset = (char*)(exceptionInfo->ExceptionRecord->ExceptionAddress) - (char*)FaultModuleHandle;
+        INT_PTR ExceptionOffset = (char*)(ExceptionInfo->ExceptionRecord->ExceptionAddress) - (char*)FaultModuleHandle;
         StringCchPrintf(StringBuffer, MAX_SPRINTF, TEXT("%p"), (void*)ExceptionOffset);
         Result = WerReportSetParameter(reportHandle, WER_P7, TEXT("Exception Offset"), StringBuffer);
 
@@ -145,7 +145,7 @@ namespace WERReport
         return Result;
     }
 
-    WER_SUBMIT_RESULT CreateReport(::_EXCEPTION_POINTERS* ExceptionInfo)
+    WER_SUBMIT_RESULT CreateReport(EXCEPTION_POINTERS* ExceptionInfo)
     {
         WER_REPORT_INFORMATION reportInfo = { sizeof(WER_REPORT_INFORMATION) };
         {
